@@ -10,4 +10,15 @@ public class Semestre {
         this.periodo = periodo;
         this.materias = materias;
     }
+
+    public String toString() {
+        StringBuilder datos = new StringBuilder();
+        datos.append(this.numero + ", ");
+        datos.append(this.periodo + ", ");
+        for (Materia materia : this.materias) {
+            datos.append(materia + ";");
+        }
+        datos.append(".");
+        return new String(datos);
+    }
 }
