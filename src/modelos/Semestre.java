@@ -1,11 +1,26 @@
 package modelos;
 
+import java.util.LinkedList;
+import excepciones.SemestreVacio;
+
 public class Semestre {
     private byte numero;
     private String periodo;
-    private Materia[] materias;
+    private LinkedList<Materia> materias;
 
-    public Semestre(byte numero, String periodo, Materia[] materias) {
+    public Semestre(LinkedList<Materia> materias) throws SemestreVacio{
+        if(materias == null) {
+            throw new SemestreVacio();
+        }
+        this.numero = 0;
+        this.periodo = null;
+        this.materias = materias;
+    }
+
+    public Semestre(byte numero, String periodo, LinkedList<Materia> materias) throws SemestreVacio{
+        if(materias.isEmpty()) {
+            throw new SemestreVacio();
+        }
         this.numero = numero;
         this.periodo = periodo;
         this.materias = materias;
