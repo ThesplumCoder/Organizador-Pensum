@@ -43,7 +43,7 @@ public class Materia {
         datos.append(this.codigo + ",");
         datos.append(this.nombre + ",");
         datos.append(this.creditos + ",");
-        if(!(this.requisitos.isEmpty())) {
+        if(this.requisitos != null) {
             for(Materia m : this.requisitos) {
                 datos.append(m + ",");
             }
