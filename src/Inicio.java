@@ -65,24 +65,23 @@ public class Inicio {
      * @return pensum : Pensum|null.
      */
     public static Pensum crearPensum() {
-        Scanner lector = new Scanner(System.in);
         LinkedList<Semestre> semestres = new LinkedList<>();
         Pensum pensum = null;
 
-        boolean crearSemestres = true;
-        do {
-            semestres.push(creaSemestre());
-            System.out.print("¿Otro semestre?(1:si|0:no) = ");
-            crearSemestres = (lector.nextByte() == 1)? true : false;
-            lector.nextLine();
-        } while (crearSemestres);
-        LimpiarPantalla.limpiar();
-
-        try {
+        try (Scanner lector = new Scanner(System.in)) {
+            boolean crearSemestres = true;
+            do {
+                semestres.push(creaSemestre());
+                System.out.print("¿Otro semestre?(1:si|0:no) = ");
+                crearSemestres = (lector.nextByte() == 1)? true : false;
+                lector.nextLine();
+            } while (crearSemestres);
+            LimpiarPantalla.limpiar();
+    
             pensum = new Pensum(semestres);
             return pensum;
-        } catch (PensumVacio ex) {
-            ex.printStackTrace();
+        } catch (PensumVacio pensumVacio) {
+            pensumVacio.printStackTrace();
         }
         return pensum;
     }
@@ -94,30 +93,30 @@ public class Inicio {
      * @return semestre : Semestre|null.
      */
     public static Semestre creaSemestre() {
-        Scanner lector = new Scanner(System.in);
         Semestre semestre = null;
 
-        System.out.println("Semestre =");
-        byte numeroSmt = lector.nextByte();
-        lector.nextLine();
-        System.out.println("Periodo =");
-        String periodoSmt = lector.nextLine();
-        
-        boolean crearMaterias = true;
-        LinkedList<Materia> materias = new LinkedList<>();
-        do{
-            materias.push(creaMateria());
-            System.out.print("¿Otra materia?(1:si|0:no) = ");
-            crearMaterias = (lector.nextByte() == 1)? true : false;
+        try (Scanner lector = new Scanner(System.in)) {
+            System.out.println("Semestre =");
+            byte numeroSmt = lector.nextByte();
             lector.nextLine();
-        } while(crearMaterias);
-        LimpiarPantalla.limpiar();
-
-        try {
+            System.out.println("Periodo =");
+            String periodoSmt = lector.nextLine();
+            
+            boolean crearMaterias = true;
+            LinkedList<Materia> materias = new LinkedList<>();
+            do{
+                materias.push(creaMateria());
+                System.out.print("¿Otra materia?(1:si|0:no) = ");
+                byte res = lector.nextByte();
+                crearMaterias = (res == 1)? true : false;
+                lector.nextLine();
+            } while(crearMaterias);
+            LimpiarPantalla.limpiar();
+    
             semestre = new Semestre(numeroSmt, periodoSmt, materias);
             return semestre;
-        } catch (SemestreVacio ex) {
-            ex.printStackTrace();
+        } catch (SemestreVacio semestreVacio) {
+            semestreVacio.printStackTrace();
         }
         return semestre;
     }
@@ -164,8 +163,6 @@ public class Inicio {
             return materia;
         } catch (MateriaIncompleta materiaIncompleta) {
             materiaIncompleta.printStackTrace();
-        } catch (Exception excepcion) {
-            excepcion.printStackTrace();
         }
         return materia;
     }
