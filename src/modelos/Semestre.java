@@ -1,5 +1,6 @@
 package modelos;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import excepciones.SemestreVacio;
 
@@ -24,6 +25,30 @@ public class Semestre {
         this.numero = numero;
         this.periodo = periodo;
         this.materias = materias;
+    }
+
+    /**
+     * Retorna el numero del semestre.
+     * @return numero
+     */
+    public byte darNumero () {
+        return this.numero;
+    }
+
+    /**
+     * Retorna el periodo en el que se desarrolla el semestre.
+     * @return periodo
+     */
+    public String darPeriodo () {
+        return this.periodo;
+    }
+
+    /**
+     * Retorna las materias que tiene asignadas.
+     * @return materias
+     */
+    public ArrayList<Materia> darMaterias () {
+        return new ArrayList<Materia>(this.materias);
     }
 
     public String toString() {

@@ -2,14 +2,16 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import excepciones.*;
 import modelos.*;
+import servicios.Buscador;
 import servicios.Utilidades;
 
 public class Inicio {
     static Scanner entrada = new Scanner(System.in);
+    static Pensum pensumBase = null;
+
     public static void main(String[] args) {
         byte respuesta = 5;
-        Pensum pensumBase = null;
-        Scanner entrada = new Scanner(System.in);
+        
         
         String[] opciones = {
             "1. Crear pensum",
@@ -128,6 +130,34 @@ public class Inicio {
         return semestre;
     }
 
+    private static LinkedList<Materia> pedirRequisitos () {
+        do {
+            System.out.print("Requisitos(separados por comas si es más de uno) = ");
+            String codigosReq = entrada.nextLine();
+            if(codigosReq.isBlank()) {
+                break;
+            }
+
+            String[] aux = Utilidades.fragmentarCadenas(codigosReq, ",");
+            LinkedList<Materia> materiasReq = new LinkedList<>();
+            try {
+                for (String codigoReq : aux) {
+                    Materia materiaObj = Buscador.buscarMateria(codigoReq, pensumBase);
+                    if (materiaObj != null) {
+                        materiasReq.add(materiaObj);
+                    } else {
+                        throw new MateriaInexistente();
+                    }
+                }
+                break;
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                System.out.println("Intente de nuevo...");
+            }
+        } while (true);
+        return null;
+    }
+
     /**
      * Pide los datos necesarios por consola para crear una materia. Si sucede un
      * error se retornara un null.
@@ -146,20 +176,19 @@ public class Inicio {
             System.out.print("Creditos = ");
             byte creditos = entrada.nextByte();
             entrada.nextLine();
-            System.out.print("Requisitos(separados por comas si es más de uno) = ");
-            String requisitos = entrada.nextLine();
+
+            LinkedList<Materia> requisitos = pedirRequisitos();
             System.out.print("Estado(1:Cursada, 2:No cursada, 3:Perdida) = ");
-            byte estadoRes = entrada.nextByte();
-            entrada.nextLine();
+            String estadoRes = entrada.nextLine();
             EstadoMateria estado;
             switch(estadoRes){
-                case 1:
+                case "1":
                     estado = EstadoMateria.CURSADA;
                     break;
-                case 2:
+                case "2":
                     estado = EstadoMateria.NOCURSADA;
                     break;
-                case 3:
+                case "3":
                     estado = EstadoMateria.PERDIDA;
                     break;
                 default:
@@ -167,7 +196,7 @@ public class Inicio {
                     break;
             }
 
-            materia = new Materia(codigo, nombre, creditos, null, estado);
+            materia = new Materia(codigo, nombre, creditos, requisitos, estado);
             return materia;
         } catch (MateriaIncompleta materiaIncompleta) {
             materiaIncompleta.printStackTrace();
