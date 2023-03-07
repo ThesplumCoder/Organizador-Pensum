@@ -29,11 +29,10 @@ public class Semestre {
     public String toString() {
         StringBuilder datos = new StringBuilder();
         datos.append(this.numero + ", ");
-        datos.append(this.periodo + ", ");
+        datos.append(this.periodo + "\n");
         for (Materia materia : this.materias) {
-            datos.append(materia + ";");
+            datos.append(materia + "\n");
         }
-        datos.append(".");
         return new String(datos);
     }
 }

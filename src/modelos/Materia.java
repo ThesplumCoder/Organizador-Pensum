@@ -1,11 +1,16 @@
 package modelos;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
-
 import excepciones.MateriaIncompleta;
+import servicios.Utilidades;
 
 public class Materia {
-    static int caracteresMaximos = 1;
+    /*
+     * Empieza por defecto en este numero porque la palabra "Requisitos" que se usa en toString()
+     * tiene esa cantidad de caracteres.
+     */
+    private static int caracteresMaximos = 10;
     private byte creditos;
     private String codigo;
     private String nombre;
@@ -41,6 +46,10 @@ public class Materia {
         }
     }
 
+    public static int darCaracteresMaximos() {
+        return Materia.caracteresMaximos;
+    }
+
     public byte darCreditos() {
         return this.creditos;
     }
@@ -61,18 +70,6 @@ public class Materia {
         return this.estado;
     }
 
-    private String normalizarDatos(String dato) {
-        int diferencia = Materia.caracteresMaximos - dato.length();
-        if(diferencia != 0) {
-            StringBuilder aux = new StringBuilder();
-            for(int i = 1; i <= diferencia; i++) {
-                aux.append(" ");
-            }
-            return dato.concat(new String(aux));
-        }
-        return dato;
-    }
-
     /**
      * Devuelve los datos de la materia en una cadena.
      */
@@ -81,15 +78,14 @@ public class Materia {
         /*
          * Esta variable almacena el nombre de las materias que son requisitos de la materia.
          */
-        StringBuilder aux = new StringBuilder();
+        LinkedList<String> aux = new LinkedList<>();
         if(this.requisitos != null) {
             for (Materia materia : this.requisitos) {
-                aux.append(materia.darNombre() + ", ");
+                aux.add(materia.darNombre());
             }
         } else {
-            aux.append("NR");
+            aux.add("NR");
         }
-
         String[] encabezados = {
             "Código",
             "Nombre",
@@ -97,23 +93,34 @@ public class Materia {
             "Requisitos",
             "Estado"
         };
-        String[] datos = {
-            this.codigo,
-            this.nombre,
-            String.valueOf(this.creditos),
-            new String(aux),
-            this.estado.toString()
-        };
+
+        ArrayList<String> datos = new ArrayList<>();
+        datos.add(this.codigo);
+        datos.add(this.nombre);
+        datos.add(String.valueOf(this.creditos));
+        datos.add(aux.peek());
+        datos.add(this.estado.toString());
+        if(aux.size() > 1) {
+            for (String nReq : aux) {
+                datos.add("");
+                datos.add("");
+                datos.add("");
+                datos.add(nReq);
+                datos.add("");
+            }
+        }
 
         StringBuilder res = new StringBuilder();
         for (String encabezado : encabezados) {
-            encabezado = normalizarDatos(encabezado);
+            encabezado = Utilidades.normalizarDatos(encabezado);
             res.append(encabezado);
         }
         res.append("\n");
-        for (String dato : datos) {
-            dato = normalizarDatos(dato);
-            res.append(dato);
+        for (int i = 1; i <= datos.size(); i++) {
+            res.append(Utilidades.normalizarDatos(datos.get(i-1)));
+            if ((i % 5) == 0) {
+                res.append("\n");
+            }
         }
         
         return new String(res);

@@ -1,17 +1,15 @@
 import java.util.LinkedList;
 import java.util.Scanner;
-import excepciones.MateriaIncompleta;
-import excepciones.PensumVacio;
-import excepciones.SemestreVacio;
+import excepciones.*;
 import modelos.*;
-import utilidades.*;
+import servicios.Utilidades;
 
 public class Inicio {
-
+    static Scanner entrada = new Scanner(System.in);
     public static void main(String[] args) {
         byte respuesta = 5;
         Pensum pensumBase = null;
-        Scanner lector = new Scanner(System.in);
+        Scanner entrada = new Scanner(System.in);
         
         String[] opciones = {
             "1. Crear pensum",
@@ -21,6 +19,7 @@ public class Inicio {
             "5. Salir"
         };
         do {
+            Utilidades.limpiar();
             System.out.println("ORGANIZADOR DE PENSUM");
             for(String opcion : opciones) {
                 System.out.println(opcion);
@@ -28,9 +27,9 @@ public class Inicio {
 
             System.out.print("R: ");
             try {
-                respuesta = lector.nextByte();
-                lector.nextLine();
-                LimpiarPantalla.limpiar();
+                respuesta = entrada.nextByte();
+                entrada.nextLine();
+                Utilidades.limpiar();
             } catch (Exception e) {
                 e.printStackTrace();
                 respuesta = 5;
@@ -43,8 +42,12 @@ public class Inicio {
                 case 3:
                     if (pensumBase == null) {
                         System.out.println("No hay pensum aún.");
+                        System.out.print("Salir...");
+                        String salir = entrada.nextLine();
                     } else {
-                        System.out.println(pensumBase);
+                        System.out.print(pensumBase);
+                        System.out.print("Salir...");
+                        String salir = entrada.nextLine();
                     }
                     break;
                 case 5:
@@ -55,28 +58,29 @@ public class Inicio {
             }
         } while (respuesta != 5);
 
-        lector.close();
+        entrada.close();
     }
 
     /**
      * Pide los datos necesarios por consola para crear un pensum. Si sucede un
      * error se retornara un null.
-     * @param lector : objeto que nos permite leer la entrada de consola.
+     * @param entrada : objeto que nos permite leer la entrada de consola.
      * @return pensum : Pensum|null.
      */
     public static Pensum crearPensum() {
         LinkedList<Semestre> semestres = new LinkedList<>();
         Pensum pensum = null;
 
-        try (Scanner lector = new Scanner(System.in)) {
+        try {
             boolean crearSemestres = true;
             do {
+                Utilidades.limpiar();
                 semestres.push(creaSemestre());
                 System.out.print("¿Otro semestre?(1:si|0:no) = ");
-                crearSemestres = (lector.nextByte() == 1)? true : false;
-                lector.nextLine();
+                crearSemestres = (entrada.nextByte() == 1)? true : false;
+                entrada.nextLine();
             } while (crearSemestres);
-            LimpiarPantalla.limpiar();
+            Utilidades.limpiar();
     
             pensum = new Pensum(semestres);
             return pensum;
@@ -89,29 +93,32 @@ public class Inicio {
     /**
      * Pide los datos necesarios por consola para crear un semestre. Si sucede un
      * error se retornara un null.
-     * @param lector : objeto que nos permite leer la entrada de consola.
+     * @param entrada : objeto que nos permite leer la entrada de consola.
      * @return semestre : Semestre|null.
      */
     public static Semestre creaSemestre() {
         Semestre semestre = null;
 
-        try (Scanner lector = new Scanner(System.in)) {
-            System.out.println("Semestre =");
-            byte numeroSmt = lector.nextByte();
-            lector.nextLine();
-            System.out.println("Periodo =");
-            String periodoSmt = lector.nextLine();
+        try {
+            System.out.println("[Creando Semestre]");
+            System.out.print("Semestre = ");
+            byte numeroSmt = entrada.nextByte();
+            entrada.nextLine();
+            System.out.print("Periodo = ");
+            String periodoSmt = entrada.nextLine();
+            Utilidades.limpiar();
             
             boolean crearMaterias = true;
             LinkedList<Materia> materias = new LinkedList<>();
             do{
+                Utilidades.limpiar();
                 materias.push(creaMateria());
                 System.out.print("¿Otra materia?(1:si|0:no) = ");
-                byte res = lector.nextByte();
+                byte res = entrada.nextByte();
                 crearMaterias = (res == 1)? true : false;
-                lector.nextLine();
+                entrada.nextLine();
             } while(crearMaterias);
-            LimpiarPantalla.limpiar();
+            Utilidades.limpiar();
     
             semestre = new Semestre(numeroSmt, periodoSmt, materias);
             return semestre;
@@ -124,25 +131,26 @@ public class Inicio {
     /**
      * Pide los datos necesarios por consola para crear una materia. Si sucede un
      * error se retornara un null.
-     * @param lector : objeto que nos permite leer la entrada de consola.
+     * @param entrada : objeto que nos permite leer la entrada de consola.
      * @return materia : Materia|null.
      */
     public static Materia creaMateria() {
         Materia materia = null;
 
-        try (Scanner lector = new Scanner(System.in)) {
+        try {
+            System.out.println("[Creando Materia]");
             System.out.print("Codigo = ");
-            String codigo = lector.nextLine();
+            String codigo = entrada.nextLine();
             System.out.print("Nombre = ");
-            String nombre = lector.nextLine();
+            String nombre = entrada.nextLine();
             System.out.print("Creditos = ");
-            byte creditos = lector.nextByte();
-            lector.nextLine();
+            byte creditos = entrada.nextByte();
+            entrada.nextLine();
             System.out.print("Requisitos(separados por comas si es más de uno) = ");
-            String requisitos = lector.nextLine();
+            String requisitos = entrada.nextLine();
             System.out.print("Estado(1:Cursada, 2:No cursada, 3:Perdida) = ");
-            byte estadoRes = lector.nextByte();
-            lector.nextLine();
+            byte estadoRes = entrada.nextByte();
+            entrada.nextLine();
             EstadoMateria estado;
             switch(estadoRes){
                 case 1:
