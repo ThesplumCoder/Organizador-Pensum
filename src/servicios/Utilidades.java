@@ -1,10 +1,33 @@
 package servicios;
 
+import java.util.Scanner;
 import java.util.regex.PatternSyntaxException;
 
 import modelos.Materia;
 
 public class Utilidades {
+    private static Scanner lector = new Scanner(System.in);
+
+    /**
+     * Cierra la entrada por teclado.
+     */
+    public static void cerrarLector () {
+        lector.close();
+    }
+    
+    /**
+     * Utilidad que nos permite leer cadenas escritas por teclado.
+     * @return Retorna la cadena que se leyó del teclado, si ocurre un error retorna null.
+     */
+    public static String leer () {
+        String res = null;
+        try {
+            res = lector.nextLine();
+        } catch (Exception ex) {
+            System.out.println("Ha ocurrido un error mientras leía");
+        }
+        return res;
+    }
 
     public static void limpiar() {
         try {
@@ -38,8 +61,7 @@ public class Utilidades {
      * delimitador.
      * @param cadena Cadena que se va a dividir.
      * @param delimitador Cadena que indica que símbolo va a ser el delimitador.
-     * @return cadenas Arreglo con las cadenas encontradas después de haberlas dividido por el
-     * delimitador.
+     * @return Arreglo con las cadenas encontradas después de haberlas dividido por el delimitador.
      */
     public static String[] fragmentarCadenas(String cadena, String delimitador) {
         String[] res = null;
@@ -49,5 +71,5 @@ public class Utilidades {
             System.out.println("El delimitador no es válido.");
         }
         return res;
-    } 
+    }
 }

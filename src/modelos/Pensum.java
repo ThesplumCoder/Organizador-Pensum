@@ -8,7 +8,16 @@ import excepciones.PensumVacio;
 public class Pensum {
     private LinkedList<Semestre> semestres;
 
-    public Pensum(LinkedList<Semestre> semestres) throws PensumVacio {
+    public Pensum (Semestre semestre) throws PensumVacio{
+        if(semestre == null) {
+            throw new PensumVacio();
+        } else {
+            this.semestres = new LinkedList<>();
+            this.semestres.add(semestre);
+        }
+    }
+
+    public Pensum (LinkedList<Semestre> semestres) throws PensumVacio {
         if(semestres.isEmpty()){
             throw new PensumVacio();
         } else {
@@ -18,10 +27,18 @@ public class Pensum {
 
     /**
      * Retorna los semestres del pensum.
-     * @return semestres Una instancia de ArrayList que contiene los semestres.
+     * @return Una lista que contiene los semestres.
      */
     public ArrayList<Semestre> darSemestres () {
         return new ArrayList<Semestre>(this.semestres);
+    }
+
+    /**
+     * Agrega un semestre al final de la lista de semestres.
+     * @param s semestre a agregar.
+     */
+    public void agregaSemestre (Semestre s) {
+        this.semestres.add(s);
     }
 
     /**
